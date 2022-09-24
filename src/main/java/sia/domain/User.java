@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 @Data
 @Entity
@@ -19,27 +20,43 @@ public class User implements UserDetails
     @Id
     private Long id;
 
+    private Role role;
+
     private String name;
     private String phone;
     private String address;
+    private String nationality;
+    private Sex    sex;
+    private Date   dateOfBirth;
+    private int    identificationNumber;
+
     private String email;
     private String password;
 
     public User() {
 
     }
+    public User(Role role, String name, String phone, String address, String nationality,
+                Sex sex, Date dateOfBirth, int identificationNumber, String email, String password) {
 
-    public User(String name, String phone, String address, String email, String password) {
-        this.name     = name;
-        this.email    = email;
-        this.password = password;
-        this.phone    = phone;
-        this.address  = address;
+        this.role                 = role;
+        this.name                 = name;
+        this.phone                = phone;
+        this.address              = address;
+        this.nationality          = nationality;
+        this.sex                  = sex;
+        this.dateOfBirth          = dateOfBirth;
+        this.identificationNumber = identificationNumber;
+        this.email                = email;
+        this.password             = password;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        if (role.equals(Role.ESTUDIANTE))
+            return Arrays.asList(new SimpleGrantedAuthority("ROLE_STUDENT"));
+        else
+            return Arrays.asList(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
     }
 
     @Override
@@ -62,6 +79,18 @@ public class User implements UserDetails
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    public enum Role {
+        ESTUDIANTE,
+        PROFESOR,
+    }
+
+
+    public enum Sex {
+        HOMBRE,
+        MUJER,
     }
 
 }

@@ -3,8 +3,12 @@ package sia.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sia.domain.User;
+import sia.domain.forms.RegistrationUserForm;
 import sia.repository.UserRepository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -18,9 +22,8 @@ public class UserService
         this.userRepository = userRepository;
     }
 
-    public User save(User user)
-    {
-        return userRepository.save(user);
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     public User findByEmail(String email)
@@ -32,19 +35,45 @@ public class UserService
         return userRepository.findUserById(id);
     }
 
-    public String getRoleUser(String email) {
-
-        User user = findByEmail(email);
-
-        String role =
-                user
-                        .getClass()
-                        .getName()
-                        .replace("sia.domain.user.","")
-                        .toLowerCase(Locale.ROOT);
-
-        return role;
+    public User save(User user)
+    {
+        return userRepository.save(user);
     }
+
+    public User update(Long id, RegistrationUserForm form) {
+
+        User user = findById(id);
+
+        if (form.getRole() != null)
+            user.setRole(User.Role.valueOf(form.getRole()));
+        if (form.getName() != null)
+            user.setName(form.getName());
+        if (form.getPhone() != null)
+            user.setPhone(form.getPhone());
+        if (form.getAddress() != null)
+            user.setAddress(form.getAddress());
+        if (form.getNationality() != null)
+            user.setNationality(form.getNationality());
+        if (form.getSex() != null)
+            user.setSex(User.Sex.valueOf(form.getSex()));
+        if (form.getDateOfBirth() != null) {
+            try {
+                user.setDateOfBirth(new SimpleDateFormat("dd/MM/yyyy").parse(form.getDateOfBirth()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (form.getIdentificationNumber() != 0)
+            user.setIdentificationNumber(form.getIdentificationNumber());
+        if (form.getEmail() != null)
+            user.setEmail(form.getEmail());
+
+        save(user);
+
+        return user;
+    }
+
+
 
     public void delete(String email) {
         userRepository.delete(findByEmail(email));

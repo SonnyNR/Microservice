@@ -4,17 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import sia.domain.Professor;
-import sia.domain.Student;
 import sia.domain.User;
-import sia.domain.forms.RegistrationProfessorForm;
-import sia.domain.forms.RegistrationStudentForm;
 import sia.service.UserService;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/register")
 public class RegisterController {
+
+    /*
 
     private UserService userService;
     private PasswordEncoder passwordEncoder;
@@ -99,4 +97,6 @@ public class RegisterController {
 
         userService.delete(email);
     }
+
+    */
 }

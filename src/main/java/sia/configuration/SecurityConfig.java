@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
         http.authorizeRequests()
                 .anyRequest().permitAll()
-                .and().formLogin().loginPage("/login").loginProcessingUrl("/authentication").defaultSuccessUrl("/auth/success", true).failureUrl("/auth/err").permitAll()
+                .and().formLogin().loginPage("/login").loginProcessingUrl("/auth").defaultSuccessUrl("/authentication/success", true).failureUrl("/authentication/err").permitAll()
                 .and().logout().invalidateHttpSession(true).clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutUrl("/api/logout").logoutSuccessUrl("http://localhost:3000/").permitAll();
 

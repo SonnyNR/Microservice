@@ -1,0 +1,43 @@
+type Date {
+    day: String
+    month: String
+    year: String
+}
+
+input UserInput {
+
+    role: String
+    name: String
+    phone: String
+    address: String
+    nationality: String
+    sex: String
+    dateOfBirth: String
+    identificationNumber: Int
+    email: String
+    password: String
+
+}
+
+type User {
+    id: ID!
+    role: String
+    name: String
+    phone: String
+    address: String
+    nationality: String
+    sex: String
+    dateOfBirth: Date
+    identificationNumber: Int
+    email: String
+}
+
+type Query {
+    findAll: [User]
+    findOne(id: ID!): User
+}
+
+type Mutation {
+    createUser(input: UserInput): User
+    updateUser(id: ID!, input: UserInput): User
+}
