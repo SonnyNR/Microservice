@@ -45,7 +45,7 @@ public class UserService
         User user = findById(id);
 
         if (form.getRole() != null)
-            user.setRole(User.Role.valueOf(form.getRole()));
+            user.setRole(form.getRole());
         if (form.getName() != null)
             user.setName(form.getName());
         if (form.getPhone() != null)
@@ -55,14 +55,9 @@ public class UserService
         if (form.getNationality() != null)
             user.setNationality(form.getNationality());
         if (form.getSex() != null)
-            user.setSex(User.Sex.valueOf(form.getSex()));
-        if (form.getDateOfBirth() != null) {
-            try {
-                user.setDateOfBirth(new SimpleDateFormat("dd/MM/yyyy").parse(form.getDateOfBirth()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+            user.setSex(form.getSex());
+        if (form.getDateOfBirth() != null)
+            user.setDateOfBirth(form.getDateOfBirth());
         if (form.getIdentificationNumber() != 0)
             user.setIdentificationNumber(form.getIdentificationNumber());
         if (form.getEmail() != null)
@@ -73,10 +68,8 @@ public class UserService
         return user;
     }
 
-
-
-    public void delete(String email) {
-        userRepository.delete(findByEmail(email));
+    public void delete(Long id) {
+        userRepository.delete(findById(id));
     }
 
 }

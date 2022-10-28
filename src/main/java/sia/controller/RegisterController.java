@@ -5,16 +5,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sia.domain.User;
+import sia.domain.forms.RegistrationUserForm;
 import sia.service.UserService;
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/register")
 public class RegisterController {
 
-    /*
-
-    private UserService userService;
+    private UserService     userService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -23,80 +25,51 @@ public class RegisterController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping(path = "/student/create", consumes = "application/json")
+    @PostMapping(path = "/create", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createStudent(@RequestBody RegistrationStudentForm registrationStudentForm) {
-        return userService.save(registrationStudentForm.toStudent(passwordEncoder));
+    public User createStudent(@RequestBody RegistrationUserForm form) {
+        return userService.save(form.toUser(passwordEncoder));
     }
 
-    @GetMapping(path = "/student/get", produces = "application/json")
-    public Student getStudent(@RequestBody String email) {
-        return (Student) userService.findByEmail(email);
-
+    @GetMapping(path = "/user/{id}", produces = "application/json")
+    public User getUser(@PathVariable("id") Long id) {
+        return userService.findById(id);
     }
 
-    @PatchMapping(path="/student/update", consumes = "application/json")
-    public Student updateStudent(@RequestBody RegistrationStudentForm data) {
-        Student student = (Student) userService.findByEmail(data.getEmail());
-
-        if (data.getName() != null)
-            student.setName(data.getName());
-        if (data.getEmail() != null)
-            student.setEmail(data.getEmail());
-        if (data.getPhone() != null)
-            student.setPhone(data.getPhone());
-        if (data.getAcademicSemester() != 0)
-            student.setAcademicSemester(data.getAcademicSemester());
-        if (data.getDegree() != null)
-            student.setDegree(data.getDegree());
-
-        userService.save(student);
-
-        return student;
+    @GetMapping(path = "/user/username/{username}", produces = "application/json")
+    public User getUserByUsername(@PathVariable("username") String username) {
+        return userService.findByEmail(username + "@unal.edu.co");
     }
 
-    @DeleteMapping(path = "/student/delete", consumes = "text/plain")
-    public void deleteStudent(@RequestBody String email) {
-        userService.delete(email);
+    @GetMapping(path = "/users", produces = "application/json")
+    public List<User> getUsers(HttpSession session, Principal principal) {
+        return userService.findAll();
     }
 
-    @PostMapping(path = "/professor/create", consumes = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createProfessor(@RequestBody RegistrationProfessorForm registrationProfessorForm) {
-        return userService.save(registrationProfessorForm.toProfessor(passwordEncoder));
+    @PatchMapping(path="/update/{id}", consumes = "application/json")
+    public User updateStudent(@PathVariable("id") Long id,
+                              @RequestBody RegistrationUserForm form) {
+
+        return userService.update(id, form);
     }
 
-    @GetMapping(path = "/professor/get", produces = "application/json")
-    public Professor getProfessor(@RequestBody String email) {
-        return (Professor) userService.findByEmail(email);
-
+    @DeleteMapping(path = "/delete/{id}")
+    public void deleteStudent(@PathVariable("id") Long id) {
+        userService.delete(id);
     }
 
-    @PatchMapping(path="/professor/update", consumes = "application/json")
-    public Professor updateProfessor(@RequestBody RegistrationProfessorForm data) {
-        Professor professor = (Professor) userService.findByEmail(data.getEmail());
-
-        if (data.getName() != null)
-            professor.setName(data.getName());
-        if (data.getEmail() != null)
-            professor.setEmail(data.getEmail());
-        if (data.getPhone() != null)
-            professor.setPhone(data.getPhone());
-        if (data.getCareer() != null)
-            professor.setCareer(data.getCareer());
-        if (data.getYearsOfExperience() != 0)
-            professor.setYearsOfExperience(data.getYearsOfExperience());
-
-        userService.save(professor);
-
-        return professor;
+    @GetMapping(path = "/role/{id}")
+    public String getRoleUser(@PathVariable("id") Long id) {
+        return userService.findById(id).getRole().toString();
     }
 
-    @DeleteMapping(path = "/professor/delete", consumes = "text/plain")
-    public void deleteProfessor(@RequestBody String email) {
-
-        userService.delete(email);
+    @GetMapping(path = "/user", produces = "application/json")
+    public User getCurrentUser(Principal principal) {
+        if (principal != null)
+            return userService.findByEmail(principal.getName());
+        else
+            return null;
     }
 
-    */
+
 }
